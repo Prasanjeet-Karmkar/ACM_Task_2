@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Register</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>LOGIN/REGISTER</h1>
+        <div class="register-container">
+
+            <div class="log-reg-link">
+                <a href="./login.html">Login</a>
+                <a href="./register.html">Register</a>
+            </div>
+            <div class="page-title">
+                <h2>Register</h2>
+            </div>
+            <div class="form-table">
+                <form id="register">
+                    Full Name:
+                    <input type="text" id="fullname" placeholder="Fullname" required>
+                    Email Adress:
+                    <input type="email" id="Email" placeholder="Email ID" required>
+                    Password:
+                    <input type="password" id="regpass" placeholder="Password" required>
+                    <input type="submit" id="signUp" value="Sign Up">
+                </form>
+            </div>
+            <div class="social-icons">
+                <i class="fa-brands fa-facebook"></i>
+                <i class="fa-brands fa-instagram"></i>
+                <i class="fa-brands fa-twitter"></i>
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGOnG34GBE_ayjbUJpA_wAiL-hviYdK_c",
+            authDomain: "acm-2-4c6fb.firebaseapp.com",
+            databaseURL: "https://acm-2-4c6fb-default-rtdb.firebaseio.com",
+            projectId: "acm-2-4c6fb",
+            storageBucket: "acm-2-4c6fb.appspot.com",
+            messagingSenderId: "687615478466",
+            appId: "1:687615478466:web:1c7b7145a81a4324ef895b"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth();
+
+
+        signUp.addEventListener('click', (e) => {
+
+            var email = document.getElementById('Email').value;
+            var fullname = document.getElementById('fullname').value;
+            var password = document.getElementById('regpass').value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    set(ref(database, 'users/' + user.uid), {
+                        fullname: fullname,
+                        email: email
+                    })
+                    alert('user created');
+                    // ...
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                    alert(errorMessage);
+                    // ..
+                });
+
+        });
+        const user = auth.currentUser;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                const uid = user.uid;
+                // ...
+            } else {
+                // User is signed out
+                // ...
+            }
+        });
+    </script>
+
+</body>
+
+</html>
